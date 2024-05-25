@@ -1,0 +1,19 @@
+[package]
+name = "rust-wasm-udf"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+anyhow = "1.0.86"
+bytes = "1.6.0"
+extism-pdk = {version = "1.1.0", features = ["protobuf"]}
+prost = "0.12.6"
+prost-types = "0.12.6"
+serde = { version = "1.0.197", features = ["derive"] }
+
+[build-dependencies]
+prost-build = "0.12.6"
