@@ -1,0 +1,7 @@
+wasm_spark/.idea
+target
+csharp_wasm_udf/bin
+csharp_wasm_udf/dist
+dist
+.bsp/
+*.dylib
