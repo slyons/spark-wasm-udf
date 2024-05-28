@@ -27,7 +27,7 @@ case class TypedWASMUDFExpression(urlOrPath: String, funcName: String, returnTyp
       i += 1
     }
     val argBytes = argBuilder.buildPartial().toByteArray
-    val plugin = WASMPluginCache.getPlugin(urlOrPath, false)
+    val plugin = WASMPluginCache.getPlugin(urlOrPath, true)
     val responseBytes = plugin.call(funcName, argBytes)
     val asLiteral = ConnectLiteral.parseFrom(responseBytes)
     LiteralValueProtoConverterV2.toCatalystValue(asLiteral)
