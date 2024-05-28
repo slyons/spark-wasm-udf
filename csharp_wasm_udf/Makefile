@@ -14,8 +14,8 @@ Wasmudf.cs:
 	protoc ../proto/wasmudf.proto --proto_path=../proto/ --csharp_out=.
 
 wasm: protobuf
-	dotnet run
-	cp bin/Debug/net8.0/wasi-wasm/dotnet.wasm ../csharp_wasm_udf.wasm
+	dotnet build
+	cp bin/Debug/net8.0/wasi-wasm/AppBundle/Plugin.wasm ../csharp_wasm_udf.wasm
 
 protobuf: Types.cs Literal.cs Wasmudf.cs
 

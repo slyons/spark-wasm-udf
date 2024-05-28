@@ -1,7 +1,8 @@
 wasm_spark/.idea
 target
 csharp_wasm_udf/bin
-csharp_wasm_udf/dist
+csharp_wasm_udf/obj
 dist
 .bsp/
 *.dylib
+.DS_Store

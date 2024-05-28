@@ -1,0 +1,3 @@
+[submodule "c_wasm_udf/extism-pdk"]
+	path = c_wasm_udf/extism-pdk
+	url = https://github.com/extism/c-pdk
