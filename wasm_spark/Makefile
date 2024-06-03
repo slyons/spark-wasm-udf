@@ -1,7 +1,7 @@
 all: jar
 
-jar: target/scala-2.12/spark-wasm-udf*.jar
-	cp target/scala-2.12/spark-wasm-udf*.jar ../
+jar: target/scala-2.12/spark-wasm-udf-assembly*.jar
+	cp target/scala-2.12/spark-wasm-udf-assembly*.jar ../
 
 clean:
 	sbt clean

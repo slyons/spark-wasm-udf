@@ -34,7 +34,7 @@ import com.google.protobuf.ByteString
 import co.gaffe.proto
 import org.apache.spark.sql.catalyst.ScalaReflection
 import org.apache.spark.sql.catalyst.util.{SparkDateTimeUtils, SparkIntervalUtils}
-import org.apache.spark.sql.connect.common.DataTypeProtoConverter._
+//import org.apache.spark.sql.connect.common.DataTypeProtoConverter._
 import org.apache.spark.sql.types._
 import org.apache.spark.unsafe.types.CalendarInterval
 import org.apache.spark.util.SparkClassUtils
@@ -336,7 +336,7 @@ object LiteralValueProtoConverterV2 {
     } else if (dataType.hasStruct) { v =>
       toCatalystStruct(v.getStruct)
     } else {
-      throw InvalidPlanInput(s"Unsupported Literal Type: $dataType)")
+      throw new UnsupportedOperationException(s"Unsupported Literal Type: $dataType)")
     }
   }
 
@@ -382,7 +382,7 @@ object LiteralValueProtoConverterV2 {
         tupleClass.getConstructors.head.newInstance(data: _*).asInstanceOf[Product]
       } catch {
         case _: Exception =>
-          throw InvalidPlanInput(s"Unsupported Literal: ${data.mkString("Array(", ", ", ")")})")
+          throw new UnsupportedOperationException(s"Unsupported Literal: ${data.mkString("Array(", ", ", ")")})")
       }
     }
 

@@ -1,6 +1,7 @@
 package org.apache.spark.sql.catalyst.expressions
 
 import co.gaffe.WASMPluginCache
+import co.gaffe.ChicoryWASMPluginCache
 import co.gaffe.proto.UDFArgs
 import co.gaffe.proto.{Literal => ConnectLiteral}
 import org.apache.spark.sql.catalyst.InternalRow
@@ -8,7 +9,7 @@ import org.apache.spark.sql.catalyst.expressions.codegen.CodegenFallback
 import org.apache.spark.sql.connect.common.LiteralValueProtoConverterV2
 import org.apache.spark.sql.types.DataType
 
-case class TypedWASMUDFExpression(urlOrPath: String, funcName: String, returnType: DataType, children: Expression*)
+case class WASMUDFExpression(urlOrPath: String, useChicory: Boolean, funcName: String, returnType: DataType, children: Expression*)
   extends Expression with CodegenFallback {
 
   override def prettyName: String = funcName
@@ -27,8 +28,14 @@ case class TypedWASMUDFExpression(urlOrPath: String, funcName: String, returnTyp
       i += 1
     }
     val argBytes = argBuilder.buildPartial().toByteArray
-    val plugin = WASMPluginCache.getPlugin(urlOrPath, true)
-    val responseBytes = plugin.call(funcName, argBytes)
+    val responseBytes = if (useChicory) {
+      val plugin = WASMPluginCache.getPlugin(urlOrPath, true)
+      plugin.call(funcName, argBytes)
+    } else {
+      val plugin = ChicoryWASMPluginCache.getPlugin(urlOrPath, true)
+      plugin.call(funcName, argBytes)
+    }
+
     val asLiteral = ConnectLiteral.parseFrom(responseBytes)
     LiteralValueProtoConverterV2.toCatalystValue(asLiteral)
   }
@@ -36,5 +43,5 @@ case class TypedWASMUDFExpression(urlOrPath: String, funcName: String, returnTyp
   override def dataType: DataType = returnType
 
   override protected def withNewChildrenInternal(newChildren: IndexedSeq[Expression]): Expression =
-    TypedWASMUDFExpression(urlOrPath, funcName, returnType, newChildren:_*)
+    WASMUDFExpression(urlOrPath, useChicory, funcName, returnType, newChildren:_*)
 }

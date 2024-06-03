@@ -1,5 +1,5 @@
 package co.gaffe
-import scala.collection.mutable.HashMap
+import java.util.concurrent.ConcurrentHashMap
 import org.extism.sdk.manifest.Manifest
 import org.extism.sdk.{HostFunction, HostUserData, Plugin}
 import org.extism.sdk.wasm.{UrlWasmSource, WasmSource, WasmSourceResolver}
@@ -8,7 +8,7 @@ import java.net.URL
 import java.nio.file.Path
 
 object WASMPluginCache {
-  var cache: HashMap[String, Plugin] = HashMap()
+  var cache: ConcurrentHashMap[String, Plugin] = new ConcurrentHashMap
 
   def getPlugin(sourceOrPath: String, withWasi: Boolean = false, hostFunctions: Array[HostFunction[_ <: HostUserData]] = null): Plugin = {
     if (sourceOrPath.startsWith("http")) {
@@ -23,11 +23,10 @@ object WASMPluginCache {
     if (!cache.contains(srcPath.toString)) {
       val src = new WasmSourceResolver().resolve(srcPath)
       val plugin = this.pluginFromSource(src, withWasi, hostFunctions)
-      cache += ((srcPath.toString, plugin))
-      //cache.addOne((srcPath.toString, plugin))
+      cache.put(srcPath.toString, plugin)
       plugin
     } else {
-      cache(srcPath.toString)
+      cache.get(srcPath.toString)
     }
   }
 
@@ -35,11 +34,10 @@ object WASMPluginCache {
     if (!cache.contains(url.toString)) {
       val src = UrlWasmSource.fromUrl(url.toString)
       val plugin = this.pluginFromSource(src, withWasi, hostFunction)
-      cache += ((url.toString, plugin))
-      //cache.addOne((url.toString, plugin))
+      cache.put(url.toString, plugin)
       plugin
     } else {
-      cache(url.toString)
+      cache.get(url.toString)
     }
   }
 

@@ -65,7 +65,7 @@ object DataTypeProtoConverterV2 {
       case proto.DataType.KindCase.UDT => toCatalystUDT(t.getUdt)
 
       case _ =>
-        throw InvalidPlanInput(s"Does not support convert ${t.getKindCase} to catalyst types.")
+        throw new UnsupportedOperationException(s"Does not support convert ${t.getKindCase} to catalyst types.")
     }
   }
 
@@ -119,7 +119,7 @@ object DataTypeProtoConverterV2 {
 
   private def toCatalystUDT(t: proto.DataType.UDT): UserDefinedType[_] = {
     if (t.getType != "udt") {
-      throw InvalidPlanInput(
+      throw new UnsupportedOperationException(
         s"""UserDefinedType requires the 'type' field to be 'udt', but got '${t.getType}'.""")
     }
 
@@ -130,7 +130,7 @@ object DataTypeProtoConverterV2 {
         .newInstance()
     } else {
       if (!t.hasPythonClass || !t.hasSerializedPythonClass || !t.hasSqlType) {
-        throw InvalidPlanInput(
+        throw new UnsupportedOperationException(
           "PythonUserDefinedType requires all the three fields: " +
             "python_class, serialized_python_class and sql_type.")
       }
@@ -301,7 +301,7 @@ object DataTypeProtoConverterV2 {
           .build()
 
       case _ =>
-        throw InvalidPlanInput(s"Does not support convert ${t.typeName} to connect proto types.")
+        throw new UnsupportedOperationException(s"Does not support convert ${t.typeName} to connect proto types.")
     }
   }
 }
