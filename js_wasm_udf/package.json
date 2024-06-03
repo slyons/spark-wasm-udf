@@ -10,6 +10,7 @@
     "author": "",
     "license": "BSD-3-Clause",
     "devDependencies": {
+        "@extism/js-pdk": "^1.0.1",
         "esbuild": "^0.19.6"
     },
     "dependencies": {
